@@ -1,0 +1,217 @@
+/* Fix for date picker display issues */
+.dp__main {
+  z-index: 50 !important;
+}
+
+.dp__overlay {
+  z-index: 50 !important;
+}
+
+.dp__instance_calendar {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  background-color: #fff !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+  border-radius: 8px !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.dp__outer_menu {
+  position: absolute !important;
+  z-index: 50 !important;
+}
+
+/* Improve date picker menu appearance */
+.dp__menu {
+  min-width: 300px !important;
+  background-color: #fff !important;
+  border-radius: 8px !important;
+  padding: 8px !important;
+}
+
+/* Improve date picker input appearance */
+.dp__input {
+  padding: 0.5rem 0.75rem;
+  width: 100%;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.375rem;
+  height: 38px;
+  background-color: #fff !important;
+  color: #1e293b !important;
+  font-size: 0.875rem;
+}
+
+.dp__input:focus {
+  border-color: #EDD0C4;
+  outline: none;
+  box-shadow: 2px 2px 2px 2px #FCE1D3,
+  2px -2px 2px 2px #FCE1D3,
+  -2px 2px 2px 2px #FCE1D3,
+  -2px -2px 2px 2px #FCE1D3;
+}
+
+/* Improve month/year selection */
+.dp__month_year_row {
+  margin-bottom: 10px !important;
+  background-color: #f8fafc !important;
+  border-radius: 6px !important;
+  padding: 8px 4px !important;
+}
+
+.dp__month_year_select {
+  font-weight: 600 !important;
+  color: #334155 !important;
+}
+
+/* Improve calendar header */
+.dp__calendar_header {
+  color: #64748b !important;
+  font-weight: 600 !important;
+  padding: 4px 0 !important;
+}
+
+/* Improve days appearance */
+.dp__calendar_item {
+  height: 36px !important;
+  width: 36px !important;
+  margin: 2px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  font-size: 0.9rem !important;
+  color: #334155 !important;
+  border: 1px solid transparent !important;
+}
+
+.dp__calendar_item:hover {
+  background-color: #f1f5f9 !important;
+  border-color: #cbd5e1 !important;
+}
+
+.dp__active_date {
+  background-color: #f97316 !important; /* Orange color to match your theme */
+  color: white !important;
+  font-weight: bold !important;
+}
+
+.dp__today {
+  border-color: #f97316 !important; /* Orange color to match your theme */
+  font-weight: 600 !important;
+}
+
+/* Improve buttons */
+.dp__button {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 6px 14px !important;
+  border-radius: 6px !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  background-color: #f97316 !important; /* Orange color to match your theme */
+  color: white !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.dp__button:hover {
+  background-color: #ea580c !important; /* Darker orange */
+}
+
+/* Action buttons */
+.dp__action_row {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-top: 10px !important;
+  padding-top: 10px !important;
+  border-top: 1px solid #e2e8f0 !important;
+}
+
+/* Month/year selector styling */
+.dp__month_year_select {
+  border-radius: 6px !important;
+  padding: 4px 8px !important;
+}
+
+.dp__month_year_select:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Week number column */
+.dp__week_num {
+  color: #94a3b8 !important;
+  font-size: 0.8rem !important;
+}
+
+/* Month pagination buttons */
+.dp__month_arrow {
+  padding: 4px !important;
+  border-radius: 50% !important;
+  width: 30px !important;
+  height: 30px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.dp__month_arrow:hover {
+  background-color: #f1f5f9 !important;
+}
+
+/* Disabled dates */
+.dp__cell_disabled {
+  opacity: 0.4 !important;
+}
+
+/* Selected range styling */
+.dp__range_start, .dp__range_end {
+  background-color: #f97316 !important;
+  color: white !important;
+}
+
+.dp__range_between {
+  background-color: #fdba74 !important; /* Lighter orange */
+  color: #7c2d12 !important; /* Dark orange text */
+}
+
+/* Fix for the July calendar title in the example */
+.dp__calendar_header_separator {
+  height: 1px !important;
+  background-color: #e2e8f0 !important;
+  margin: 8px 0 !important;
+}
+
+.dp__instance_calendar .dp__selection_preview {
+  font-weight: 600 !important;
+  color: #334155 !important;
+  margin-bottom: 8px !important;
+  padding: 8px !important;
+  background-color: #f8fafc !important;
+  border-radius: 6px !important;
+  text-align: center !important;
+}
+
+/* Make sure arrow is visible */
+.dp__inner_nav {
+  color: #64748b !important;
+}
+
+/* Navigation buttons */
+.dp__prev, .dp__next {
+  width: 30px !important;
+  height: 30px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.dp__prev:hover, .dp__next:hover {
+  background-color: #f1f5f9 !important;
+} 

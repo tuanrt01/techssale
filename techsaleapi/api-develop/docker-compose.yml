@@ -1,0 +1,25 @@
+services:
+  techsale-db:
+    image: mysql:latest
+    container_name: techsale-db
+    environment:
+      MYSQL_ROOT_PASSWORD: techsale2024
+      TZ: Asia/Ho_Chi_Minh
+  techsale-api:
+    container_name: techsale-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DATASOURCE_URL=jdbc:mysql://techsale-db:3306/techsale
+      - DB_USER=root
+      - DB_PASSWORD=techsale2024
+      - AUTO_MIGRATE=false
+      - TZ=Asia/Bangkok
+    volumes:
+      - ./attachments:/home/attachments
+    ports:
+      - "9110:80"
+    networks:
+      - techzen-net
+    restart: on-failure:1

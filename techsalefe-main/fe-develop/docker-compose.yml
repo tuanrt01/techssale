@@ -1,0 +1,11 @@
+services:
+  techsale-fe:
+    container_name: techsale-fe
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8110:80
+    networks:
+      - techzen-net
+    restart: always

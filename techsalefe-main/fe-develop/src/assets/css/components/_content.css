@@ -1,0 +1,24 @@
+.content {
+  padding: 0px 22px;
+  border-radius: 1.3rem;
+  @apply min-w-0 min-h-screen bg-slate-100 flex-1 pb-10 shadow-sm dark:bg-darkmode-700;
+  @media (max-width: calc(theme("screens.md") - 1px)) {
+    @apply px-4 max-w-full;
+  }
+  &:before {
+    content: "";
+    @apply w-full h-px block;
+  }
+}
+.scroll-view::-webkit-scrollbar
+{
+  border-radius: 1px;
+  width: 5px;
+  background-color: transparent;
+}
+
+.scroll-view::-webkit-scrollbar-thumb
+{
+  border-radius: 5px;
+  @apply bg-primary
+}

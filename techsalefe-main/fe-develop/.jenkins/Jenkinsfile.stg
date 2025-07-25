@@ -1,0 +1,53 @@
+pipeline {
+    agent any;
+
+    stages {
+        stage("deploy") {
+            steps {
+                script {
+                    try {
+                        // Try to get the username, or set a default value
+                        def triggeredUser
+                        def cause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
+                        if (cause != null) {
+                            triggeredUser = cause.getUserName()
+                        } else {
+                            triggeredUser = "Automated Trigger By Gitlab"
+                        }
+                        cause = null
+
+                        mattermostSend(
+                            color: 'warning',
+                            message: "🔄 Starting Deployment: *${env.JOB_NAME}* #${env.BUILD_NUMBER} (<${env.BUILD_URL}|View Details>)",
+                            text: "${triggeredUser} started the pipeline!!!"
+                        )
+                        updateGitlabCommitStatus name: 'Deploy Techzai Production', state: 'running'
+
+                        sshagent(credentials: ['192.168.13.6-ssh']) {
+                            sh '''
+                                ssh -o StrictHostKeyChecking=no -l $SSH_13_6_USER 192.168.13.6 -p $SSH_13_6_PORT << END
+                                cd /home/techzen/Docker/projects/techzai/techsale
+                                ./git_pull.sh
+                                cd ..
+                                docker compose up -d --build techsale-fe
+                            '''
+                        }
+
+                        updateGitlabCommitStatus name: 'Deploy Techzai Production', state: 'success'
+                        mattermostSend(
+                            color: 'good',
+                            message: "🚀 Successful Deployment: *${env.JOB_NAME}* #${env.BUILD_NUMBER} (<${env.BUILD_URL}|View Details>)"
+                        )
+                    } catch (Exception e) {
+                        mattermostSend(
+                            color: 'danger',
+                            message: "🚨 Failed Pipeline: *${env.JOB_NAME}* #${env.BUILD_NUMBER} (<${env.BUILD_URL}|View Details>)"
+                        )
+                        updateGitlabCommitStatus name: 'Deploy Techzai Production', state: 'failed'
+                        error 'Deployment failed!'
+                    }
+                }
+            }
+        }
+    }
+}

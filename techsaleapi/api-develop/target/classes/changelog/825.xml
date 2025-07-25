@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.10.xsd"
+        xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext">
+    <changeSet id="825-1" author="duclh">
+        <createTable tableName="example_table_techsale">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="825-2" author="duclh">
+        <addColumn tableName="example_table_techsale">
+            <column name="new_column" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="825-3" author="duclh">
+        <addColumn tableName="example_table_techsale">
+            <column name="new_column_2" type="varchar(255)"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="825-4" author="duclh">
+        <dropTable tableName="example_table_techsale"/>
+    </changeSet>
+    <changeSet id="825-5" author="duclh">
+        <createTable tableName="example_table_techsale_2">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="825-6" author="duclh">
+        <dropTable tableName="example_table_techsale_2"/>
+    </changeSet>
+    <changeSet id="825-7" author="duclh">
+        <sql>
+            CREATE TABLE example_table_techsale_3 (
+            id INT PRIMARY KEY,
+            name VARCHAR(255)
+            );
+        </sql>
+    </changeSet>
+    <changeSet id="825-8" author="duclh">
+        <sql>
+            DROP TABLE example_table_techsale_3;
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

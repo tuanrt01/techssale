@@ -1,0 +1,60 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/techsale?useSSL=false&allowPublicKeyRetrieval=true&sessionVariables=sql_mode=''
+    username: root
+    password: Tuantranminh1472@
+
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQLDialect
+        format_sql: true
+  #    show-sql: true
+
+  servlet:
+    multipart:
+      max-file-size: 1MB
+
+  logging:
+    level:
+      root: INFO
+      org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+  liquibase:
+    change-log: classpath:/changelog/master.xml
+    enabled: ${LIQUIBASE_ENABLED:false}
+
+logging:
+  level:
+    root: INFO
+  path:
+    name: "/var/logs/app.log"
+
+server:
+  servlet:
+    context-path: /techsale_interface
+  port: 8081
+  address: 0.0.0.0
+
+techsale:
+  jwt-secret: offshore_api_jwt_key-199@$!!
+  attachments-path: "D://attachments//%d_%s_%s %s.%s"
+
+aes:
+  secret-key: EiHFv9vbgLpD6MWQp1afQZBgPQmR5Xz7
+
+mattermost:
+  mattermost-api-url: https://techchat.techzen.vn/api/v4/posts
+  notify-channel: c4m7arktspbdfgtjzcj7w4xebe
+  auth-token: o3t9jyknwfnq8cdurnnwha53xo
+  link-admin: http://techsale.techzen.vn/admin
+  link-user: http://techsale.techzen.vn
+
+  create-success-msg: "@%s đã gửi yêu cầu mua %s\n@%s truy cập %s để xét duyệt\n_________________________________________"
+  update-success-msg: "@%s đã cập nhật yêu cầu mua %s!\n@%s truy cập %s để xét duyệt\n_________________________________________"
+  approver-accept-msg: "@%s Yêu cầu mua %s của bạn đã được @%s duyệt. Truy cập %s để xem chi tiết\n@%s Có yêu cầu mua hàng mới, truy cập %s để xem chi tiết \n_________________________________________"
+  approver-reject-msg: "@%s Yêu cầu mua %s của bạn đã bị @%s từ chối vì lý do: %s\nTruy cập %s để xem chi tiết\n_________________________________________"
+  buyer-accept-msg: "@%s Yêu cầu mua %s của bạn đã được thực hiện thành công. Truy cập %s để xem chi tiết\n@%s truy cập %s để xem chi tiết \n_________________________________________"
+  buyer-reject-msg: "@%s Yêu cầu mua %s của bạn đã bị @%s từ chối vì lý do %s\nTruy cập %s để xem chi tiết\n@%s truy cập %s để xem chi tiết\n_________________________________________"
+  delete-msg: "@%s vừa xóa yêu cầu mua %s\n@%s. Truy cập %s để xem chi tiết\n_________________________________________"
+  buyer-order-msg: "@%s đang tiến hành đặt mua %s\n@%s truy cập %s để xem chi tiết\n@%s truy cập %s để xem chi tiết\n_________________________________________"

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="add_delivery_time_tracking_columns" author="claude">
+        <comment>Add columns to track ordering and delivery dates</comment>
+        
+        <addColumn tableName="ts_request_application">
+            <column name="ordering_date" type="datetime" remarks="Timestamp when the order was placed (status changed to ORDERING)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        
+        <addColumn tableName="ts_request_application">
+            <column name="delivery_date" type="datetime" remarks="Timestamp when the order was delivered (status changed to SUCCESS)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        
+        <!-- Also add to history table for consistency -->
+        <addColumn tableName="ts_request_application_his">
+            <column name="ordering_date" type="datetime" remarks="Timestamp when the order was placed (status changed to ORDERING)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+        
+        <addColumn tableName="ts_request_application_his">
+            <column name="delivery_date" type="datetime" remarks="Timestamp when the order was delivered (status changed to SUCCESS)">
+                <constraints nullable="true"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog> 
