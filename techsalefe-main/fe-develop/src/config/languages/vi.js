@@ -236,5 +236,21 @@ export default {
   TOAST: {
     ORDER_SUCCESS: "Đặt hàng thành công",
     ORDER_ERROR: "Đặt hàng thất bại. Vui lòng thử lại",
+    DATE_CREATED_FUTURE: "Ngày tạo không thể chọn ngày trong tương lai vì chưa được tạo!",
+    DATE_EXPECT_FUTURE: "Ngày nhận chỉ được chọn tối đa 20 ngày trong tương lai!",
+    DATE_TO_GREATER: "Ngày đến phải lớn hơn hoặc bằng ngày từ!",
+    PRICE_NEGATIVE: "Số tiền không được âm!",
+    PRICE_TOO_SMALL: "Số tiền không được nhỏ hơn 10.000!",
+    PRICE_TOO_LARGE: "Số tiền không thể lớn hơn 100.000.000!",
+    PRICE_FROM_TO_GREATER: "Giá từ phải nhỏ hơn hoặc bằng giá đến!",
+  },
+  TOOLTIP: {
+    DATE_FUTURE_INVALID: "Ngày ở tương lai, không hợp lệ",
+  },
+  PAGINATION: {
+    items_per_page: "mục trên mỗi trang",
+    showing: "Hiển thị",
+    of: "trong tổng số",
+    items: "mục"
   }
 }

@@ -64,6 +64,16 @@ export default {
   TOAST: {
     ORDER_SUCCESS: "Order placed successfully",
     ORDER_ERROR: "Failed to place order. Please try again",
+    DATE_CREATED_FUTURE: "Creation date cannot be selected in the future because it hasn't been created yet!",
+    DATE_EXPECT_FUTURE: "Expected receive date can only be selected up to 20 days in the future!",
+    DATE_TO_GREATER: "End date must be greater than or equal to start date!",
+    PRICE_NEGATIVE: "Price cannot be negative!",
+    PRICE_TOO_SMALL: "Price cannot be less than 10,000!",
+    PRICE_TOO_LARGE: "Price cannot be greater than 100,000,000!",
+    PRICE_FROM_TO_GREATER: "Price from must be less than or equal to price to!",
+  },
+  TOOLTIP: {
+    DATE_FUTURE_INVALID: "Date in the future, not valid",
   },
   DETAIL: {
     DELIVERY_TIME: "Delivery Time",
@@ -73,5 +83,11 @@ export default {
     DAYS_ONGOING: "days (in progress)",
     SAME_DAY: "Same day",
     TODAY: "Today",
+  },
+  PAGINATION: {
+    items_per_page: "items per page",
+    showing: "Showing",
+    of: "of",
+    items: "items"
   }
 }

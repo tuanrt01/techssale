@@ -56,7 +56,7 @@ public class SecurityConfig extends GlobalMethodSecurityConfiguration {
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             .and()
             .authorizeRequests()
-            .antMatchers()
+            .antMatchers("/public-api/**")
             .permitAll()
             .antMatchers("/auth/login")
             .permitAll()

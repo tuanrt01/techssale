@@ -2,50 +2,52 @@
   <Loading :show-loading="loadingAction" />
   <DetailMyRequest v-if="!standalone" :id="id" :isOpen="isDetailModalOpen" @close="closeDetailModal"/>
   <PurchaseDetailModal v-if="standalone" :show="showDetailModal" :data="detailData" @update:show="showDetailModal = $event" />
-  <div class="mt-1">
+  <div class="mt-1 overflow-hidden">
     <div class="filter-wrapper">
       <div class="intro-y box p-5 mt-3">
         <div class="flex flex-col">
           <form id="tabulator-html-filter-form" @submit.prevent="handleSearch" @keyup.enter="handleSearch">
-            <div class="flex justify-evenly">
-              <div>
-                <div class="flex mb-2 search__width">
-                  <label class="label__width flex items-center font-medium mr-4">{{$t('lang.SEARCH.SR1')}}</label>
+            <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
+              <div class="space-y-4">
+                <div class="flex items-center">
+                  <label class="w-24 flex items-center font-medium mr-3">{{$t('lang.SEARCH.SR1')}}</label>
                   <input
                       id="tabulator-html-filter-value"
                       v-model.trim="name"
-                      class="form-control input-width"
+                      class="form-control flex-1"
                       :placeholder="$t('lang.SEARCH.SR4')"
                       type="text"
                   />
                 </div>
-                <div class="flex search__width">
-                  <label class="label__width flex items-center font-medium mr-2">{{$t('lang.DETAIL.DT1')}}</label>
-                  <div v-for="(displayName, statusValue) in RequestStatus"
-                       :key="statusValue"
-                       :class="{
-                            'shadow shadow-gray-400 hover:shadow-black-500/60 cursor-pointer': statusValue === 'WAITING' && selectedStatus !== 'WAITING',
-                            'bg-yellow-400 text-white cursor-pointer': statusValue === 'WAITING' && selectedStatus === 'WAITING',
-                            'shadow shadow-gray-400 hover:shadow-black-500/70 cursor-pointer': statusValue === 'PROCESSING' && selectedStatus !== 'PROCESSING',
-                            'bg-sky-300 text-white cursor-pointer': statusValue === 'PROCESSING' && selectedStatus === 'PROCESSING',
-                            'shadow shadow-gray-400 hover:shadow-black-500/90 cursor-pointer': statusValue === 'ORDERING' && selectedStatus !== 'ORDERING',
-                            'bg-green-400 text-white cursor-pointer': statusValue === 'ORDERING' && selectedStatus === 'ORDERING',
-                            'shadow shadow-gray-400 hover:shadow-black-500/80 cursor-pointer': statusValue === 'SUCCESS' && selectedStatus !== 'SUCCESS',
-                            'bg-green-300 text-white cursor-pointer': statusValue === 'SUCCESS' && selectedStatus === 'SUCCESS',
-                            'shadow shadow-gray-400 hover:shadow-black-500/50 cursor-pointer': statusValue === 'REJECTED' && selectedStatus !== 'REJECTED',
-                            'bg-red-300 text-white cursor-pointer': statusValue === 'REJECTED' && selectedStatus === 'REJECTED',
-                           }"
-                       :value="statusValue"
-                       class="flex h-8 justify-center items-center p-2 m-2 rounded-xl test"
-                       @click="filterByStatus(statusValue)">
-                    {{ $t(displayName) }}
+                <div class="flex items-center">
+                  <label class="w-24 flex items-center font-medium mr-3">{{$t('lang.DETAIL.DT1')}}</label>
+                  <div class="flex gap-2">
+                    <div v-for="(displayName, statusValue) in RequestStatus"
+                         :key="statusValue"
+                         :class="{
+                              'shadow shadow-gray-400 hover:shadow-black-500/60 cursor-pointer': statusValue === 'WAITING' && selectedStatus !== 'WAITING',
+                              'bg-yellow-400 text-white cursor-pointer': statusValue === 'WAITING' && selectedStatus === 'WAITING',
+                              'shadow shadow-gray-400 hover:shadow-black-500/70 cursor-pointer': statusValue === 'PROCESSING' && selectedStatus !== 'PROCESSING',
+                              'bg-sky-300 text-white cursor-pointer': statusValue === 'PROCESSING' && selectedStatus === 'PROCESSING',
+                              'shadow shadow-gray-400 hover:shadow-black-500/90 cursor-pointer': statusValue === 'ORDERING' && selectedStatus !== 'ORDERING',
+                              'bg-green-400 text-white cursor-pointer': statusValue === 'ORDERING' && selectedStatus === 'ORDERING',
+                              'shadow shadow-gray-400 hover:shadow-black-500/80 cursor-pointer': statusValue === 'SUCCESS' && selectedStatus !== 'SUCCESS',
+                              'bg-green-300 text-white cursor-pointer': statusValue === 'SUCCESS' && selectedStatus === 'SUCCESS',
+                              'shadow shadow-gray-400 hover:shadow-black-500/50 cursor-pointer': statusValue === 'REJECTED' && selectedStatus !== 'REJECTED',
+                              'bg-red-300 text-white cursor-pointer': statusValue === 'REJECTED' && selectedStatus === 'REJECTED',
+                             }"
+                         :value="statusValue"
+                         class="flex h-8 justify-center items-center px-3 py-1 rounded-xl text-xs whitespace-nowrap"
+                         @click="filterByStatus(statusValue)">
+                      {{ $t(displayName) }}
+                    </div>
                   </div>
                 </div>
               </div>
-              <div>
-                <div class="flex items-center gap-10 mb-2">
-                  <label class="w-20 flex items-center font-medium">{{$t('lang.DETAIL.DT2')}}</label>
-                  <div class="flex gap-5">
+              <div class="space-y-4">
+                <div class="flex items-center">
+                  <label class="w-24 flex items-center font-medium mr-3">{{$t('lang.DETAIL.DT2')}}</label>
+                  <div class="flex gap-3">
                     <VueDatePicker v-model="filterByExpectDateFrom" auto-apply
                                    class="deadline w-40 text-center form-control"
                                    format="dd/MM/yyyy"
@@ -59,6 +61,7 @@
                                    text-input
                                    aria-label="Ngày nhận (từ)"
                                    placeholder="Từ ngày..."
+                                   :max-date="maxExpectDate"
                                    @update:model-value="handleChangeDateRangeByExpectDateFrom"
                     >
                       <template #trigger>
@@ -70,6 +73,16 @@
                             <line x1="8" y1="2" x2="8" y2="6"></line>
                             <line x1="3" y1="10" x2="21" y2="10"></line>
                           </svg>
+                        </div>
+                      </template>
+                      <template #day-content="{ day, isDisabled }">
+                        <div 
+                          :class="{ 'dp__disabled': isDisabled }"
+                          class="dp__day_content"
+                          @mouseenter="isDisabled && showTooltip($event, $t('lang.TOOLTIP.DATE_FUTURE_INVALID'))"
+                          @mouseleave="isDisabled && hideTooltip()"
+                        >
+                          {{ day.day }}
                         </div>
                       </template>
                     </VueDatePicker>
@@ -87,6 +100,7 @@
                                    text-input
                                    aria-label="Ngày nhận (đến)"
                                    placeholder="Đến ngày..."
+                                   :max-date="maxExpectDate"
                                    @update:model-value="handleChangeDateRangeByExpectDateTo"
                     >
                       <template #trigger>
@@ -100,12 +114,22 @@
                           </svg>
                         </div>
                       </template>
+                      <template #day-content="{ day, isDisabled }">
+                        <div 
+                          :class="{ 'dp__disabled': isDisabled }"
+                          class="dp__day_content"
+                          @mouseenter="isDisabled && showTooltip($event, $t('lang.TOOLTIP.DATE_FUTURE_INVALID'))"
+                          @mouseleave="isDisabled && hideTooltip()"
+                        >
+                          {{ day.day }}
+                        </div>
+                      </template>
                     </VueDatePicker>
                   </div>
                 </div>
-                <div class="flex items-center gap-10">
-                  <label class="w-20 flex items-center font-medium">{{$t('lang.DETAIL.DT3')}}</label>
-                  <div class="flex gap-5">
+                <div class="flex items-center">
+                  <label class="w-24 flex items-center font-medium mr-3">{{$t('lang.DETAIL.DT3')}}</label>
+                  <div class="flex gap-3">
                     <VueDatePicker
                         v-model="filterByCreatedDateFrom"
                         auto-apply
@@ -121,6 +145,7 @@
                         text-input
                         aria-label="Ngày tạo (từ)"
                         placeholder="Từ ngày..."
+                        :max-date="maxCreatedDate"
                         @update:model-value="handleChangeDateRangeByCreatedDateFrom"
                     >
                       <template #trigger>
@@ -132,6 +157,16 @@
                             <line x1="8" y1="2" x2="8" y2="6"></line>
                             <line x1="3" y1="10" x2="21" y2="10"></line>
                           </svg>
+                        </div>
+                      </template>
+                      <template #day-content="{ day, isDisabled }">
+                        <div 
+                          :class="{ 'dp__disabled': isDisabled }"
+                          class="dp__day_content"
+                          @mouseenter="isDisabled && showTooltip($event, $t('lang.TOOLTIP.DATE_FUTURE_INVALID'))"
+                          @mouseleave="isDisabled && hideTooltip()"
+                        >
+                          {{ day.day }}
                         </div>
                       </template>
                     </VueDatePicker>
@@ -151,6 +186,7 @@
                         text-input
                         aria-label="Ngày tạo (đến)"
                         placeholder="Đến ngày..."
+                        :max-date="maxCreatedDate"
                         @update:model-value="handleChangeDateRangeByCreatedDateTo"
                     >
                       <template #trigger>
@@ -164,37 +200,59 @@
                           </svg>
                         </div>
                       </template>
+                      <template #day-content="{ day, isDisabled }">
+                        <div 
+                          :class="{ 'dp__disabled': isDisabled }"
+                          class="dp__day_content"
+                          @mouseenter="isDisabled && showTooltip($event, $t('lang.TOOLTIP.DATE_FUTURE_INVALID'))"
+                          @mouseleave="isDisabled && hideTooltip()"
+                        >
+                          {{ day.day }}
+                        </div>
+                      </template>
                     </VueDatePicker>
                   </div>
                 </div>
               </div>
-              <div>
-                <div class="flex items-center gap-10 mb-2">
-                  <label class="w-20 flex items-center font-medium">{{$t('lang.DETAIL.DT27')}}</label>
-                  <div class="flex gap-5">
-                    <input
-                        type="number"
-                        v-model="priceFrom"
-                        class="form-control w-40 text-center"
-                        placeholder="Từ"
-                    />
+              <div class="space-y-4">
+                <div class="flex items-center">
+                  <label class="w-24 flex items-center font-medium mr-3">{{$t('lang.DETAIL.DT27')}}</label>
+                  <div class="flex gap-3">
+                    <div class="flex flex-col">
+                      <input
+                          type="number"
+                          v-model="priceFrom"
+                          class="form-control w-36 text-center"
+                          :class="{ 'border-red-500': priceFromError }"
+                          placeholder="Từ"
+                          @input="validatePriceFrom"
+                          @blur="validatePriceFrom"
+                      />
+                      <span v-if="priceFromError" class="text-red-500 text-xs mt-1">{{ priceFromError }}</span>
+                    </div>
                     <div class="font-medium text-lg flex items-center">~</div>
-                    <input
-                        type="number"
-                        v-model="priceTo"
-                        class="form-control w-40 text-center"
-                        placeholder="Đến"
-                    />
+                    <div class="flex flex-col">
+                      <input
+                          type="number"
+                          v-model="priceTo"
+                          class="form-control w-36 text-center"
+                          :class="{ 'border-red-500': priceToError }"
+                          placeholder="Đến"
+                          @input="validatePriceTo"
+                          @blur="validatePriceTo"
+                      />
+                      <span v-if="priceToError" class="text-red-500 text-xs mt-1">{{ priceToError }}</span>
+                    </div>
                   </div>
                 </div>
-                <div class="mt-2 xl:mt-0">
-                  <button id="tabulator-html-filter-go" class="btn btn-primary w-full sm:w-16 mr-3"
+                <div class="flex gap-3">
+                  <button id="tabulator-html-filter-go" class="btn btn-primary flex-1"
                           type="button" @click="handleSearch">
                     {{$t('lang.SEARCH.SR2')}}
                   </button>
                   <button
                       id="tabulator-html-filter-reset"
-                      class="btn btn-secondary w-full sm:w-16 mt-2 sm:mt-0 sm:ml-1"
+                      class="btn btn-secondary flex-1"
                       type="button"
                       @click="resetFilters"
                   >
@@ -227,7 +285,44 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in purchaseHistory" :key="index" class="intro-x">
+            <!-- Loading skeleton -->
+            <template v-if="tableLoading">
+              <tr v-for="n in 5" :key="`skeleton-${n}`" class="intro-x animate-pulse">
+                <td class="w-20">
+                  <div class="h-4 bg-gray-200 rounded w-12"></div>
+                </td>
+                <td class="w-64">
+                  <div class="h-4 bg-gray-200 rounded w-32"></div>
+                </td>
+                <td>
+                  <div class="h-6 bg-gray-200 rounded w-20"></div>
+                </td>
+                <td>
+                  <div class="h-4 bg-gray-200 rounded w-20"></div>
+                </td>
+                <td>
+                  <div class="h-4 bg-gray-200 rounded w-20"></div>
+                </td>
+                <td>
+                  <div class="h-4 bg-gray-200 rounded w-20"></div>
+                </td>
+                <td>
+                  <div class="h-4 bg-gray-200 rounded w-20"></div>
+                </td>
+                <td>
+                  <div class="h-4 bg-gray-200 rounded w-16"></div>
+                </td>
+                <td>
+                  <div class="h-4 bg-gray-200 rounded w-12"></div>
+                </td>
+                <td class="text-center">
+                  <div class="h-4 bg-gray-200 rounded w-8 mx-auto"></div>
+                </td>
+              </tr>
+            </template>
+            <!-- Actual data -->
+            <template v-else>
+              <tr v-for="(item, index) in purchaseHistory" :key="index" class="intro-x">
               <td class="w-20">{{ item.id }}</td>
               <td class="w-64">
                 <Tippy
@@ -288,38 +383,153 @@
                 </div>
               </td>
             </tr>
+            </template>
           </tbody>
         </table>
       </div>
       <!-- Pagination -->
-      <div class="intro-y flex flex-wrap sm:flex-row sm:flex-nowrap items-center mt-3 justify-between">
+      <div class="intro-y flex flex-wrap sm:flex-row sm:flex-nowrap items-center mt-5 justify-between bg-slate-50 p-4 rounded-lg">
         <div class="flex items-center">
-          <select v-model="pageSize" class="form-select w-20 mr-3" @change="handlePageSizeChange">
+          <select v-model="pageSize" class="form-select w-20 mr-3 rounded-md border-slate-300" @change="handlePageSizeChange">
             <option value="5">5</option>
             <option value="10">10</option>
             <option value="20">20</option>
             <option value="50">50</option>
             <option value="100">100</option>
           </select>
-          <span class="text-gray-600">items per page</span>
+          <span class="text-gray-600">{{ $t('lang.PAGINATION.items_per_page') }}</span>
         </div>
-        <pagination 
-          v-if="purchaseHistory.length > 0"
-          :page-count="totalPages" 
-          :click-handler="changePage" 
-          :prev-text="'Prev'" 
-          :next-text="'Next'"
-          :container-class="'pagination justify-center'" 
-          :page-class="'page-item'" 
-          :page-link-class="'page-link'" 
-          :prev-class="'page-item'" 
-          :prev-link-class="'page-link'" 
-          :next-class="'page-item'" 
-          :next-link-class="'page-link'"
-          :active-class="'active'">
-        </pagination>
+        <div class="flex items-center">
+          <span class="mr-4 text-gray-600">{{ showingItemsText }}</span>
+          <pagination 
+            v-if="totalPages > 0"
+            :total-pages="totalPages"
+            :current-page="currentPage + 1"
+            :per-page="pageSize"
+            @pagechanged="changePage"
+          />
+        </div>
       </div>
     </div>
+    
+    <!-- Footer -->
+    <footer class="mt-8 bg-gradient-to-r from-orange-500 to-orange-600 text-white w-full ">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="py-8">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <!-- Company Info -->
+            <div class="col-span-1 md:col-span-2">
+              <div class="flex items-center mb-4">
+                                <div class="w-16 h-16 bg-white rounded-lg flex items-center justify-center mr-3 shadow-sm overflow-hidden">
+                  <img 
+                    src="@/assets/images/logotech.jpg" 
+                    alt="TECHSALE Logo" 
+                    class="w-full h-full object-cover"
+                    @error="handleLogoError"
+                  />
+                </div>
+                <div>
+                  <h3 class="text-xl font-bold">TECHSALE</h3>
+                  <p class="text-orange-100 text-sm">Mạch lạc quy trình, định hình đẳng cấp</p>
+                </div>
+              </div>
+              <p class="text-orange-100 text-sm leading-relaxed mb-4">
+                Hệ thống quản lý chuỗi cung ứng thông minh, giúp doanh nghiệp tối ưu hóa quy trình mua sắm và quản lý hàng tồn kho một cách hiệu quả.
+              </p>
+              <div class="flex space-x-4">
+                <a href="#" class="text-orange-100 hover:text-white transition-colors">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                  </svg>
+                </a>
+                <a href="#" class="text-orange-100 hover:text-white transition-colors">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"/>
+                  </svg>
+                </a>
+                <a href="#" class="text-orange-100 hover:text-white transition-colors">
+                  <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+            
+            <!-- Quick Links -->
+            <div>
+              <h4 class="text-lg font-semibold mb-4">Liên kết nhanh</h4>
+              <ul class="space-y-2">
+                <li>
+                  <a href="#" class="text-orange-100 hover:text-white transition-colors text-sm">
+                    Trang chủ
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="text-orange-100 hover:text-white transition-colors text-sm">
+                    Danh sách yêu cầu
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="text-orange-100 hover:text-white transition-colors text-sm">
+                    Lịch sử mua hàng
+                  </a>
+                </li>
+                <li>
+                  <a href="#" class="text-orange-100 hover:text-white transition-colors text-sm">
+                    Báo cáo thống kê
+                  </a>
+                </li>
+              </ul>
+            </div>
+            
+            <!-- Contact Info -->
+            <div>
+              <h4 class="text-lg font-semibold mb-4">Liên hệ</h4>
+              <div class="space-y-3">
+                <div class="flex items-center text-orange-100 text-sm">
+                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                  </svg>
+                  contact@techzen.vn
+                </div>
+                <div class="flex items-center text-orange-100 text-sm">
+                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                  </svg>
+                  +84 93 550 56 40
+                </div>
+                <div class="flex items-center text-orange-100 text-sm">
+                  <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                  </svg>
+                  06 Trần Phú, Thạch Thang, Hải Châu, Da Nang, Vietnam
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Bottom Bar -->
+        <div class="border-t border-orange-400 py-4">
+          <div class="flex flex-col md:flex-row justify-between items-center">
+            <div class="text-orange-100 text-sm mb-2 md:mb-0">
+              © 2025 TECHSALE. Tất cả quyền được bảo lưu.
+            </div>
+            <div class="flex space-x-6 text-sm">
+              <a href="#" class="text-orange-100 hover:text-white transition-colors">
+                Chính sách bảo mật
+              </a>
+              <a href="#" class="text-orange-100 hover:text-white transition-colors">
+                Điều khoản sử dụng
+              </a>
+              <a href="#" class="text-orange-100 hover:text-white transition-colors">
+                Sơ đồ trang web
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
   </div>
 </template>
 
@@ -392,6 +602,10 @@ export default {
         'REJECTED': {}
       },
       debugMode: false, // Add debug mode toggle
+      currentTooltip: null, // For custom tooltip
+      priceFromError: '', // Error message for priceFrom
+      priceToError: '', // Error message for priceTo
+      tableLoading: false, // Loading state for table only
     }
   },
   created() {
@@ -424,6 +638,22 @@ export default {
       // Log để debug
       console.log('Purchase History:', history);
       return history;
+    },
+    showingItemsText() {
+      const start = this.currentPage * this.pageSize + 1;
+      const end = Math.min((this.currentPage + 1) * this.pageSize, this.totalItems);
+      return `${this.$t('lang.PAGINATION.showing')} ${start} - ${end} ${this.$t('lang.PAGINATION.of')} ${this.totalItems} ${this.$t('lang.PAGINATION.items')}`;
+    },
+    // Tính toán ngày giới hạn cho ngày nhận (20 ngày trong tương lai)
+    maxExpectDate() {
+      const today = new Date();
+      const maxDate = new Date(today);
+      maxDate.setDate(today.getDate() + 20);
+      return maxDate;
+    },
+    // Tính toán ngày giới hạn cho ngày tạo (không thể chọn ngày trong tương lai)
+    maxCreatedDate() {
+      return new Date();
     }
   },
   watch: {
@@ -457,6 +687,9 @@ export default {
       document.head.appendChild(style);
     },
     changePage(pageNum) {
+      if (pageNum < 1 || pageNum > this.totalPages) {
+        return;
+      }
       this.currentPage = pageNum - 1;
       this.fetchPurchaseHistory();
     },
@@ -478,8 +711,161 @@ export default {
       this.reasonList = res.data;
     },
     async handleSearch() {
+      // Validate price inputs
+      if (!this.validatePriceInputs()) {
+        return;
+      }
+      
       this.currentPage = 0;
       this.fetchPurchaseHistory();
+    },
+    validatePriceInputs() {
+      const minPrice = 10000; // 10.000 VND
+      const maxPrice = 100000000; // 100.000.000 VND
+      
+      // Validate priceFrom
+      if (this.priceFrom !== '' && this.priceFrom !== null) {
+        const priceFromNum = parseFloat(this.priceFrom);
+        
+        if (isNaN(priceFromNum)) {
+          this.$toast.error(this.$t('lang.TOAST.PRICE_NEGATIVE'));
+          return false;
+        }
+        
+        if (priceFromNum < 0) {
+          this.$toast.error(this.$t('lang.TOAST.PRICE_NEGATIVE'));
+          return false;
+        }
+        
+        if (priceFromNum < minPrice) {
+          this.$toast.error(this.$t('lang.TOAST.PRICE_TOO_SMALL'));
+          return false;
+        }
+        
+        if (priceFromNum > maxPrice) {
+          this.$toast.error(this.$t('lang.TOAST.PRICE_TOO_LARGE'));
+          return false;
+        }
+      }
+      
+      // Validate priceTo
+      if (this.priceTo !== '' && this.priceTo !== null) {
+        const priceToNum = parseFloat(this.priceTo);
+        
+        if (isNaN(priceToNum)) {
+          this.$toast.error(this.$t('lang.TOAST.PRICE_NEGATIVE'));
+          return false;
+        }
+        
+        if (priceToNum < 0) {
+          this.$toast.error(this.$t('lang.TOAST.PRICE_NEGATIVE'));
+          return false;
+        }
+        
+        if (priceToNum < minPrice) {
+          this.$toast.error(this.$t('lang.TOAST.PRICE_TOO_SMALL'));
+          return false;
+        }
+        
+        if (priceToNum > maxPrice) {
+          this.$toast.error(this.$t('lang.TOAST.PRICE_TOO_LARGE'));
+          return false;
+        }
+      }
+      
+      // Validate price range (priceFrom <= priceTo)
+      if (this.priceFrom !== '' && this.priceFrom !== null && 
+          this.priceTo !== '' && this.priceTo !== null) {
+        const priceFromNum = parseFloat(this.priceFrom);
+        const priceToNum = parseFloat(this.priceTo);
+        
+        if (priceFromNum > priceToNum) {
+          this.$toast.error(this.$t('lang.TOAST.PRICE_FROM_TO_GREATER'));
+          return false;
+        }
+      }
+      
+      return true;
+    },
+    validatePriceFrom() {
+      this.priceFromError = '';
+      const minPrice = 10000;
+      const maxPrice = 100000000;
+      
+      if (this.priceFrom === '' || this.priceFrom === null) {
+        return;
+      }
+      
+      const priceNum = parseFloat(this.priceFrom);
+      
+      if (isNaN(priceNum)) {
+        this.priceFromError = this.$t('lang.TOAST.PRICE_NEGATIVE');
+        return;
+      }
+      
+      if (priceNum < 0) {
+        this.priceFromError = this.$t('lang.TOAST.PRICE_NEGATIVE');
+        return;
+      }
+      
+      if (priceNum < minPrice) {
+        this.priceFromError = this.$t('lang.TOAST.PRICE_TOO_SMALL');
+        return;
+      }
+      
+      if (priceNum > maxPrice) {
+        this.priceFromError = this.$t('lang.TOAST.PRICE_TOO_LARGE');
+        return;
+      }
+      
+      // Validate range if priceTo is also set
+      if (this.priceTo !== '' && this.priceTo !== null) {
+        const priceToNum = parseFloat(this.priceTo);
+        if (!isNaN(priceToNum) && priceNum > priceToNum) {
+          this.priceFromError = this.$t('lang.TOAST.PRICE_FROM_TO_GREATER');
+          return;
+        }
+      }
+    },
+    validatePriceTo() {
+      this.priceToError = '';
+      const minPrice = 10000;
+      const maxPrice = 100000000;
+      
+      if (this.priceTo === '' || this.priceTo === null) {
+        return;
+      }
+      
+      const priceNum = parseFloat(this.priceTo);
+      
+      if (isNaN(priceNum)) {
+        this.priceToError = this.$t('lang.TOAST.PRICE_NEGATIVE');
+        return;
+      }
+      
+      if (priceNum < 0) {
+        this.priceToError = this.$t('lang.TOAST.PRICE_NEGATIVE');
+        return;
+      }
+      
+      if (priceNum < minPrice) {
+        this.priceToError = this.$t('lang.TOAST.PRICE_TOO_SMALL');
+        return;
+      }
+      
+      if (priceNum > maxPrice) {
+        this.priceToError = this.$t('lang.TOAST.PRICE_TOO_LARGE');
+        return;
+      }
+      
+      // Validate range if priceFrom is also set
+      if (this.priceFrom !== '' && this.priceFrom !== null) {
+        const priceFromNum = parseFloat(this.priceFrom);
+        if (!isNaN(priceFromNum) && priceFromNum > priceNum) {
+          this.priceToError = this.$t('lang.TOAST.PRICE_FROM_TO_GREATER');
+          return;
+        }
+      }
     },
     resetFilters() {
       this.filterByCreatedDateFrom = "";
@@ -490,7 +876,10 @@ export default {
       this.name = "";
       this.priceFrom = "";
       this.priceTo = "";
+      this.priceFromError = "";
+      this.priceToError = "";
       this.currentPage = 0;
+      this.tableLoading = false; // Reset table loading state
       this.fetchPurchaseHistory();
     },
     async viewDetails(item) {
@@ -543,7 +932,8 @@ export default {
         "size": parseInt(this.pageSize)
       };
       
-      this.$store.dispatch("general/activeLoading");
+      // Set table loading state instead of full page loading
+      this.tableLoading = true;
       
       try {
         let response;
@@ -575,19 +965,79 @@ export default {
           this.totalItems = 0;
         }
       } finally {
-        this.$store.dispatch("general/deactivateLoading");
+        this.tableLoading = false;
       }
     },
     handleChangeDateRangeByCreatedDateFrom(newDate) {
+      if (newDate) {
+        const selectedDate = new Date(newDate);
+        const today = new Date();
+        today.setHours(23, 59, 59, 999); // Đặt thời gian cuối ngày hôm nay
+        
+        if (selectedDate > today) {
+          this.$toast.error(this.$t('lang.TOAST.DATE_CREATED_FUTURE'));
+          this.filterByCreatedDateFrom = null;
+          return;
+        }
+      }
       this.filterByCreatedDateFrom = newDate;
     },
     handleChangeDateRangeByCreatedDateTo(newDate) {
+      if (newDate) {
+        const selectedDate = new Date(newDate);
+        const today = new Date();
+        today.setHours(23, 59, 59, 999); // Đặt thời gian cuối ngày hôm nay
+        
+        if (selectedDate > today) {
+          this.$toast.error(this.$t('lang.TOAST.DATE_CREATED_FUTURE'));
+          this.filterByCreatedDateTo = null;
+          return;
+        }
+        
+        // Kiểm tra ngày đến phải lớn hơn hoặc bằng ngày từ
+        if (this.filterByCreatedDateFrom && selectedDate < new Date(this.filterByCreatedDateFrom)) {
+          this.$toast.error(this.$t('lang.TOAST.DATE_TO_GREATER'));
+          this.filterByCreatedDateTo = null;
+          return;
+        }
+      }
       this.filterByCreatedDateTo = newDate;
     },
     handleChangeDateRangeByExpectDateFrom(newDate) {
+      if (newDate) {
+        const selectedDate = new Date(newDate);
+        const maxDate = new Date();
+        maxDate.setDate(maxDate.getDate() + 20);
+        maxDate.setHours(23, 59, 59, 999);
+        
+        if (selectedDate > maxDate) {
+          this.$toast.error(this.$t('lang.TOAST.DATE_EXPECT_FUTURE'));
+          this.filterByExpectDateFrom = null;
+          return;
+        }
+      }
       this.filterByExpectDateFrom = newDate;
     },
     handleChangeDateRangeByExpectDateTo(newDate) {
+      if (newDate) {
+        const selectedDate = new Date(newDate);
+        const maxDate = new Date();
+        maxDate.setDate(maxDate.getDate() + 20);
+        maxDate.setHours(23, 59, 59, 999);
+        
+        if (selectedDate > maxDate) {
+          this.$toast.error(this.$t('lang.TOAST.DATE_EXPECT_FUTURE'));
+          this.filterByExpectDateTo = null;
+          return;
+        }
+        
+        // Kiểm tra ngày đến phải lớn hơn hoặc bằng ngày từ
+        if (this.filterByExpectDateFrom && selectedDate < new Date(this.filterByExpectDateFrom)) {
+          this.$toast.error(this.$t('lang.TOAST.DATE_TO_GREATER'));
+          this.filterByExpectDateTo = null;
+          return;
+        }
+      }
       this.filterByExpectDateTo = newDate;
     },
     filterByStatus(statusValue) {
@@ -661,105 +1111,85 @@ export default {
       this.currentPage = 0; // Reset to first page when changing page size
       this.fetchPurchaseHistory();
     },
-    formatPrice(price) {
-      // Log để debug
-      console.log('Formatting price:', price);
-      
-      // Kiểm tra giá trị null/undefined
-      if (price === null || price === undefined) {
+    formatPrice(value) {
+      if (!value) return '-';
+      const formatter = new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      });
+      const priceString = formatter.format(value || 0);
+      return priceString.replace(/\D00(?=\D*$)/, "");
+    },
+    calculateDeliveryTime(item) {
+      if (!item.orderingDate || !item.deliveryDate) {
         return '-';
       }
-
-      // Chuyển đổi sang số
-      const numericPrice = Number(price);
       
-      // Kiểm tra giá trị không hợp lệ
-      if (isNaN(numericPrice)) {
-        console.error('Invalid price value:', price);
+      const orderingDate = moment(item.orderingDate);
+      const deliveryDate = moment(item.deliveryDate);
+      
+      if (!orderingDate.isValid() || !deliveryDate.isValid()) {
         return '-';
       }
-
-      try {
-        const formatter = new Intl.NumberFormat("vi-VN", {
-          style: "currency",
-          currency: "VND",
-          minimumFractionDigits: 0,
-          maximumFractionDigits: 0
-        });
-        return formatter.format(numericPrice);
-      } catch (error) {
-        console.error('Error formatting price:', error);
-        return '-';
+      
+      const days = deliveryDate.diff(orderingDate, 'days');
+      return days + ' ' + this.$t('lang.DETAIL.DAYS');
+    },
+    showTooltip(event, message) {
+      // Tạo tooltip element
+      const tooltip = document.createElement('div');
+      tooltip.className = 'custom-date-tooltip';
+      tooltip.textContent = message;
+      tooltip.style.cssText = `
+        position: absolute;
+        background-color: #1f2937;
+        color: white;
+        padding: 0.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.75rem;
+        z-index: 9999;
+        pointer-events: none;
+        white-space: nowrap;
+        top: ${event.target.offsetTop - 40}px;
+        left: ${event.target.offsetLeft + event.target.offsetWidth / 2}px;
+        transform: translateX(-50%);
+      `;
+      
+      // Thêm mũi tên
+      const arrow = document.createElement('div');
+      arrow.style.cssText = `
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border: 0.25rem solid transparent;
+        border-top-color: #1f2937;
+      `;
+      tooltip.appendChild(arrow);
+      
+      // Thêm vào body
+      document.body.appendChild(tooltip);
+      this.currentTooltip = tooltip;
+    },
+    hideTooltip() {
+      if (this.currentTooltip) {
+        document.body.removeChild(this.currentTooltip);
+        this.currentTooltip = null;
       }
     },
-    // Thêm hàm tính thời gian giao hàng
-    calculateDeliveryTime(item) {
-      // Chỉ tính thời gian cho các đơn đã hoàn thành (SUCCESS) hoặc đang giao (ORDERING)
-      try {
-        // Ưu tiên sử dụng các trường mới orderingDate và deliveryDate
-        if (item.status === 'SUCCESS' && item.orderingDate && item.deliveryDate) {
-          const orderDateTime = new Date(item.orderingDate);
-          const deliveryDateTime = new Date(item.deliveryDate);
-          
-          if (this.debugMode) {
-            console.log(`Item ${item.id} - Using specific dates - orderingDate: ${item.orderingDate}, deliveryDate: ${item.deliveryDate}`);
-          }
-          
-          // Tính số ngày chênh lệch
-          const diffTime = Math.abs(deliveryDateTime - orderDateTime);
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          
-          if (diffDays === 0) {
-            return this.$t('lang.DETAIL.SAME_DAY');
-          } else {
-            return `${diffDays} ${this.$t('lang.DETAIL.DAYS')}`;
-          }
-        } 
-        // Nếu đơn đang trong quá trình đặt hàng
-        else if (item.status === 'ORDERING' && item.orderingDate) {
-          const orderDateTime = new Date(item.orderingDate);
-          const today = new Date();
-          
-          if (this.debugMode) {
-            console.log(`Item ${item.id} - Order in progress - orderingDate: ${item.orderingDate}`);
-          }
-          
-          // Tính số ngày đã trôi qua kể từ khi đặt hàng
-          const diffTime = Math.abs(today - orderDateTime);
-          const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-          
-          if (diffDays === 0) {
-            return this.$t('lang.DETAIL.TODAY');
-          } else {
-            return `${diffDays} ${this.$t('lang.DETAIL.DAYS_ONGOING')}`;
-          }
-        }
-        
-        // Fallback: Sử dụng thời gian tạo và cập nhật nếu không có thông tin cụ thể
-        if (item && item.createdAt && item.updatedAt) {
-          const createdDate = new Date(item.createdAt);
-          const updatedDate = new Date(item.updatedAt);
-          
-          if (this.debugMode) {
-            console.log(`Item ${item.id} - Fallback - createdAt: ${item.createdAt}, updatedAt: ${item.updatedAt}`);
-          }
-          
-          if (createdDate && updatedDate) {
-            const diffTime = Math.abs(updatedDate - createdDate);
-            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-            
-            if (diffDays === 0) {
-              return this.$t('lang.DETAIL.SAME_DAY');
-            } else {
-              return `${diffDays} ${this.$t('lang.DETAIL.DAYS')}`;
-            }
-          }
-        }
-      } catch (error) {
-        console.error(`Error calculating delivery time for item ${item.id}:`, error);
-      }
+    handleLogoError(event) {
+      // Fallback to text logo if image fails to load
+      const imgElement = event.target;
+      const parentDiv = imgElement.parentElement;
       
-      return '-';
+      // Remove the image
+      imgElement.remove();
+      
+      // Add text fallback
+      const textSpan = document.createElement('span');
+      textSpan.className = 'text-orange-600 font-bold text-2xl';
+      textSpan.textContent = 'T';
+      parentDiv.appendChild(textSpan);
     }
   }
 }
@@ -999,6 +1429,16 @@ export default {
   padding-bottom: 0;
 }
 
+/* Footer styles */
+footer {
+  width: 100vw !important;
+  position: relative;
+  left: 50%;
+  right: 50%;
+  margin-left: -50vw;
+  margin-right: -50vw;
+}
+
 /* Table styles */
 .table th {
   padding: 0.75rem;
@@ -1049,4 +1489,35 @@ export default {
   color: white;
   border-color: #f97316;
 }
+
+/* Date picker disabled styles */
+.dp__day_content {
+  position: relative;
+  cursor: pointer;
+}
+
+.dp__disabled {
+  color: #cbd5e1 !important;
+  background-color: #f1f5f9 !important;
+  cursor: not-allowed !important;
+}
+
+.dp__disabled:hover {
+  background-color: #e2e8f0 !important;
+}
+
+/* Loading animation */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 </style> 

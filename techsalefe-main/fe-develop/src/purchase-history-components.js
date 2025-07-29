@@ -4,9 +4,12 @@ import { Modal } from "@/global-components/modal"
 import Pagination from "@/components/pagination/pagination.vue"
 import VTooltip from 'v-tooltip'
 import Lucide from '@/global-components/lucide'
+import Tippy from '@/global-components/tippy/Main.vue'
 
 export default (app) => {
   app.component("Loading", Loading)
+  app.component("Pagination", Pagination)
+  app.component("Tippy", Tippy)
   
   // Register Lucide icons
   app.component("LucideEye", Lucide.Eye)
@@ -16,6 +19,8 @@ export default (app) => {
   app.component("LucideCheck", Lucide.Check)
   app.component("LucideX", Lucide.X)
   app.component("LucideChevronDown", Lucide.ChevronDown)
+  app.component("LucideChevronLeftIcon", Lucide.ChevronLeft)
+  app.component("LucideChevronRightIcon", Lucide.ChevronRight)
 
   // Register directive
   app.directive('tooltip', VTooltip)

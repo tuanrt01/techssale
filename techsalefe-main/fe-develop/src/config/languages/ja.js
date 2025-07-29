@@ -186,6 +186,12 @@ export default {
     EM11: '価格（VND）',
     EM12: '日付'
   },
+  PAGINATION: {
+    items_per_page: "ページあたりのアイテム",
+    showing: "表示中",
+    of: "/",
+    items: "項目"
+  },
   PURPOSES: {
     PP1: '買い物の目的',
     PP2: '日付',
